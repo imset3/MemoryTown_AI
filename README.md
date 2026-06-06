@@ -174,6 +174,12 @@ pytest
 
 테스트는 MockLLM을 사용하므로 API Key가 없어도 실행됩니다.
 
+설치된 Ollama 모델로 실제 smoke test를 진행하려면 Ollama 서버가 실행 중인 상태에서 다음 명령어를 사용합니다.
+
+```bash
+python scripts/smoke_ollama.py
+```
+
 ## 제출용 zip 생성 방법
 
 ```bash

@@ -17,6 +17,7 @@ from .models import Agent, ConversationTurn, DailyPlan
 
 DEFAULT_OLLAMA_HOST = "http://localhost:11434"
 DEFAULT_OLLAMA_MODEL = "llama3.1:8b"
+DEFAULT_OLLAMA_NUM_PREDICT = 512
 EMBEDDING_MODEL_HINTS = ("embed", "embedding", "bge", "nomic-embed")
 
 
@@ -515,6 +516,7 @@ class OllamaLLMClient(OpenAILLMClient):
         if not self._available:
             return fallback
         try:
+            num_predict = int(os.getenv("OLLAMA_NUM_PREDICT", str(DEFAULT_OLLAMA_NUM_PREDICT)))
             data = self._request_json(
                 "/api/chat",
                 {
@@ -525,7 +527,7 @@ class OllamaLLMClient(OpenAILLMClient):
                     ],
                     "format": "json",
                     "stream": False,
-                    "options": {"temperature": 0.7},
+                    "options": {"temperature": 0.7, "num_predict": num_predict},
                 },
             )
             content = data.get("message", {}).get("content", "")
