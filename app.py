@@ -27,13 +27,13 @@ st.set_page_config(page_title="MemoryTown AI", page_icon="🧠", layout="wide")
 load_dotenv()
 
 
-AI_MODES = ["Mock 모드", "Real AI 모드", "Ollama 로컬 모드"]
+AI_MODES = ["샘플 모드", "OpenAI 모드", "Ollama 로컬 모드"]
 
 
 def default_ai_mode() -> str:
     if os.getenv("OLLAMA_HOST") or os.getenv("OLLAMA_MODEL") or detect_ollama_available() or list_ollama_models():
         return "Ollama 로컬 모드"
-    return "Mock 모드"
+    return "샘플 모드"
 
 
 def build_sample_engine(llm_client=None) -> SimulationEngine:
@@ -42,7 +42,7 @@ def build_sample_engine(llm_client=None) -> SimulationEngine:
 
 
 def make_llm_client(mode: str, ollama_model: str | None = None):
-    if mode == "Real AI 모드":
+    if mode == "OpenAI 모드":
         return OpenAILLMClient()
     if mode == "Ollama 로컬 모드":
         return OllamaLLMClient(model=ollama_model or st.session_state.get("ollama_model"))
@@ -50,7 +50,7 @@ def make_llm_client(mode: str, ollama_model: str | None = None):
 
 
 def ensure_state() -> None:
-    if "ai_mode" not in st.session_state:
+    if "ai_mode" not in st.session_state or st.session_state.ai_mode not in AI_MODES:
         st.session_state.ai_mode = default_ai_mode()
     if "ollama_host" not in st.session_state:
         st.session_state.ollama_host = normalize_ollama_host()
@@ -95,21 +95,21 @@ ensure_state()
 engine: SimulationEngine = st.session_state.engine
 
 st.title("MemoryTown AI")
-st.caption("AI Agent가 하루를 계획하고, 같은 장소에서 만나 대화하며, 기억과 관계를 형성하는 시뮬레이션")
+st.caption("캐릭터 Agent가 하루를 계획하고, 같은 장소에서 만나 대화하며, 기억과 관계를 쌓는 시뮬레이션")
 
 with st.sidebar:
     st.header("실행 설정")
-    selected_mode = st.radio("AI 모드", AI_MODES, index=AI_MODES.index(st.session_state.ai_mode))
+    selected_mode = st.radio("대화 엔진", AI_MODES, index=AI_MODES.index(st.session_state.ai_mode))
     if selected_mode != st.session_state.ai_mode:
         st.session_state.ai_mode = selected_mode
         engine.llm_client = make_llm_client(selected_mode)
         st.rerun()
     st.write(f"현재 모드: **{st.session_state.ai_mode}**")
-    if selected_mode == "Real AI 모드":
+    if selected_mode == "OpenAI 모드":
         if os.getenv("OPENAI_API_KEY"):
             st.success(f"OpenAI 모델: {os.getenv('OPENAI_MODEL', 'gpt-4.1-mini')}")
         else:
-            st.warning("OPENAI_API_KEY가 없어 Mock 응답으로 대체됩니다.")
+            st.warning("OPENAI_API_KEY가 없어 샘플 응답으로 대체됩니다.")
     if selected_mode == "Ollama 로컬 모드":
         st.session_state.ollama_host = normalize_ollama_host()
         installed_models = list_ollama_models(st.session_state.ollama_host)
@@ -145,7 +145,7 @@ with st.sidebar:
         if ollama_client.is_ready:
             st.success("로컬 Ollama 서버를 감지했습니다.")
         else:
-            st.warning("Ollama 서버를 찾지 못해 Mock 응답으로 대체됩니다.")
+            st.warning("Ollama 서버를 찾지 못해 샘플 응답으로 대체됩니다.")
         for message in ollama_client.error_messages[-2:]:
             st.caption(message)
 
@@ -169,7 +169,7 @@ tabs = st.tabs(
         "Memory 확인",
         "Relation Map 확인",
         "최종 리포트",
-        "제출 체크리스트",
+        "상태 점검",
     ]
 )
 
@@ -185,7 +185,7 @@ with tabs[0]:
         이 구조는 게임 NPC, 교육용 역할극, 시나리오 제작, AI 캐릭터 테스트 서비스로 확장할 수 있습니다.
         """
     )
-    st.info("제출 전에는 Real AI 모드 또는 Ollama 로컬 모드에서 실제 AI 기능이 작동하는지 확인하세요.")
+    st.info("OpenAI 또는 Ollama 모드를 연결하면 실제 모델 응답으로 대화와 요약을 생성할 수 있습니다.")
 
 with tabs[1]:
     st.header("Agent 생성 / 수정")
@@ -320,7 +320,7 @@ with tabs[6]:
         st.markdown(markdown)
 
 with tabs[7]:
-    st.header("제출 체크리스트")
+    st.header("상태 점검")
     checklist = [
         "Agent가 이름, 나이, 직업, 성격, Memory, Relation Map을 가진다.",
         "초기 Memory를 주입할 수 있다.",
@@ -334,7 +334,7 @@ with tabs[7]:
         "특정 Agent 기준 리포트를 화면 출력 및 파일 저장할 수 있다.",
         "OPENAI_API_KEY와 OPENAI_MODEL 환경변수를 지원한다.",
         "OLLAMA_HOST와 OLLAMA_MODEL 환경변수를 지원하고 로컬 Ollama 서버를 감지한다.",
-        "API Key가 없으면 Mock 모드로 실행된다.",
+        "외부 모델 연결이 없으면 샘플 모드로 실행된다.",
     ]
     for item in checklist:
         st.checkbox(item, value=True, disabled=True)

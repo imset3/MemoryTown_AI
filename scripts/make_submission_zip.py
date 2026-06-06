@@ -59,7 +59,7 @@ def main() -> None:
     with zipfile.ZipFile(OUTPUT_PATH, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path in iter_files():
             archive.write(path, path.relative_to(PROJECT_ROOT))
-    print(f"제출용 zip 생성 완료: {OUTPUT_PATH}")
+    print(f"배포용 zip 생성 완료: {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":

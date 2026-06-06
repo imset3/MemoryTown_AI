@@ -169,7 +169,7 @@ def choose_default_ollama_model(models: list[str]) -> str:
 
 
 class MockLLMClient(LLMClient):
-    """Deterministic development LLM that works without an API key."""
+    """Deterministic local client used when no model connection is available."""
 
     def generate_conversation(
         self,
@@ -273,7 +273,7 @@ class MockLLMClient(LLMClient):
 
 
 class OpenAILLMClient(LLMClient):
-    """OpenAI backed client. On API errors, returns safe mock-style fallbacks."""
+    """OpenAI-backed client with deterministic local fallbacks."""
 
     def __init__(self, model: str | None = None) -> None:
         load_dotenv()
@@ -290,7 +290,7 @@ class OpenAILLMClient(LLMClient):
             except Exception as exc:  # pragma: no cover - depends on local package state
                 self.error_messages.append(f"OpenAI 클라이언트 초기화 실패: {exc}")
         else:
-            self.error_messages.append("OPENAI_API_KEY가 없어 Mock 응답으로 대체합니다.")
+            self.error_messages.append("OPENAI_API_KEY가 없어 샘플 응답으로 대체합니다.")
 
     @property
     def is_ready(self) -> bool:
@@ -480,7 +480,7 @@ class OllamaLLMClient(OpenAILLMClient):
     def _probe(self) -> bool:
         if not detect_ollama_available(self.host, timeout=0.6):
             self.error_messages.append(
-                f"Ollama 서버를 찾지 못해 Mock 응답으로 대체합니다. 확인 주소: {self.host}"
+                f"Ollama 서버를 찾지 못해 샘플 응답으로 대체합니다. 확인 주소: {self.host}"
             )
             return False
         try:

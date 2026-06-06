@@ -301,9 +301,8 @@
       <a href="#run">5. 실행 방법</a>
       <a href="#download">6. GitHub 다운로드</a>
       <a href="#modes">7. AI 모드</a>
-      <a href="#assignment">8. 과제 조건 매핑</a>
+      <a href="#scope">8. 구현 범위</a>
       <a href="#study">9. 공부 순서</a>
-      <a href="#prompt">10. 완성 프롬프트</a>
     </nav>
 
     <section id="goal">
@@ -320,15 +319,15 @@
       <div class="grid">
         <div class="card">
           <h3>만드는 것</h3>
-          <p>Streamlit으로 만든 웹앱과 제출용 문서, 발표 구성, 테스트, zip 생성 스크립트입니다.</p>
+          <p>Streamlit 웹앱, 사용 문서, 발표 구성, 테스트, 배포용 zip 생성 스크립트입니다.</p>
         </div>
         <div class="card">
           <h3>AI가 하는 일</h3>
           <p>대화 생성, 대화에서 사실 추출, 관계 요약, 하루 장소 계획 생성을 담당합니다.</p>
         </div>
         <div class="card">
-          <h3>제출 포인트</h3>
-          <p>Mock, OpenAI, Ollama 모드를 지원하므로 API 키가 없어도 연습 가능하고 실제 AI 실행도 가능합니다.</p>
+          <h3>운영 포인트</h3>
+          <p>샘플, OpenAI, Ollama 모드를 지원하므로 외부 모델 없이도 흐름을 확인하고 실제 모델 연결도 테스트할 수 있습니다.</p>
         </div>
       </div>
     </section>
@@ -407,7 +406,7 @@
           <tr>
             <td><code>memorytown/llm_client.py</code></td>
             <td>AI 연결</td>
-            <td>OpenAI, Ollama, Mock 모드를 같은 방식으로 사용할 수 있게 연결합니다.</td>
+            <td>OpenAI, Ollama, 샘플 모드를 같은 방식으로 사용할 수 있게 연결합니다.</td>
           </tr>
           <tr>
             <td><code>memorytown/simulation.py</code></td>
@@ -436,8 +435,8 @@
           </tr>
           <tr>
             <td><code>scripts/make_submission_zip.py</code></td>
-            <td>제출 zip 생성</td>
-            <td>과제 제출에 필요한 파일만 모아 압축 파일을 만듭니다.</td>
+            <td>배포 zip 생성</td>
+            <td>실행에 필요한 파일만 모아 압축 파일을 만듭니다.</td>
           </tr>
         </tbody>
       </table>
@@ -451,14 +450,14 @@
       <pre><code>streamlit run app.py</code></pre>
       <p>테스트는 다음 명령어로 실행합니다.</p>
       <pre><code>pytest</code></pre>
-      <p>제출용 zip 파일은 다음 명령어로 만듭니다.</p>
+      <p>배포용 zip 파일은 다음 명령어로 만듭니다.</p>
       <pre><code>python scripts/make_submission_zip.py</code></pre>
     </section>
 
     <section id="download">
       <h2>6. GitHub Release 다운로드 방법</h2>
       <p>
-        과제 제출 링크를 받은 사람은 GitHub 저장소에서 바로 전체 프로젝트 zip을 내려받을 수 있습니다.
+        GitHub 저장소에서 바로 전체 프로젝트 zip을 내려받을 수 있습니다.
         저장소 오른쪽의 <strong>Releases</strong>를 열고 최신 릴리즈의
         <code>MemoryTown_AI_project.zip</code> 파일을 다운로드하면 됩니다.
       </p>
@@ -470,7 +469,7 @@
       </ol>
       <div class="note">
         GitHub의 초록색 <strong>Code</strong> 버튼에서 <strong>Download ZIP</strong>을 선택해도 소스코드를 받을 수 있습니다.
-        다만 과제 제출용으로는 Release에 올린 zip 파일을 안내하는 것이 가장 명확합니다.
+        배포 대상을 명확히 고정하려면 Release에 올린 zip 파일을 안내하는 편이 가장 좋습니다.
       </div>
     </section>
 
@@ -478,12 +477,12 @@
       <h2>7. AI 모드 이해하기</h2>
       <div class="grid">
         <div class="card">
-          <h3><span class="tag">Mock</span> Mock 모드</h3>
-          <p>API 키나 로컬 AI가 없어도 작동하는 연습 모드입니다. 정해진 규칙으로 대화와 Fact를 만듭니다.</p>
-          <p class="warn">제출 전 실제 AI 시연용으로는 OpenAI 또는 Ollama 모드를 한 번 실행하는 것이 안전합니다.</p>
+          <h3><span class="tag">Local</span> 샘플 모드</h3>
+          <p>API 키나 로컬 모델이 없어도 작동하는 확인용 모드입니다. 정해진 규칙으로 대화와 Fact를 만듭니다.</p>
+          <p class="warn">실제 응답 품질을 보려면 OpenAI 또는 Ollama 모드도 함께 확인하세요.</p>
         </div>
         <div class="card">
-          <h3><span class="tag">Cloud</span> Real AI 모드</h3>
+          <h3><span class="tag">Cloud</span> OpenAI 모드</h3>
           <p>OpenAI API를 사용합니다. <code>OPENAI_API_KEY</code>와 <code>OPENAI_MODEL</code>을 설정합니다.</p>
           <pre><code>OPENAI_API_KEY=실제_API_KEY
 OPENAI_MODEL=gpt-4.1-mini</code></pre>
@@ -498,19 +497,19 @@ OLLAMA_MODEL=llama3.1:8b</code></pre>
       </div>
     </section>
 
-    <section id="assignment">
-      <h2>8. 과제 조건 매핑</h2>
+    <section id="scope">
+      <h2>8. 구현 범위</h2>
       <table>
         <thead>
           <tr>
-            <th>과제 조건</th>
+            <th>기능</th>
             <th>구현 여부</th>
             <th>확인 위치</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>AI를 활용한 스타트업 서비스 기획 및 구현</td>
+            <td>서비스 기획과 실행 가능한 웹앱</td>
             <td class="ok">완료</td>
             <td><code>docs/MemoryTown_AI_기획서.md</code>, <code>app.py</code></td>
           </tr>
@@ -550,12 +549,12 @@ OLLAMA_MODEL=llama3.1:8b</code></pre>
             <td><code>memorytown/report.py</code>, 앱의 “최종 리포트” 탭</td>
           </tr>
           <tr>
-            <td>OpenAI API, Ollama, Mock fallback</td>
+            <td>OpenAI API, Ollama, 샘플 fallback</td>
             <td class="ok">완료</td>
             <td><code>memorytown/llm_client.py</code></td>
           </tr>
           <tr>
-            <td>README, 테스트, 제출 zip</td>
+            <td>README, 테스트, 배포용 zip</td>
             <td class="ok">완료</td>
             <td><code>README.md</code>, <code>tests/</code>, <code>scripts/</code></td>
           </tr>
@@ -567,147 +566,27 @@ OLLAMA_MODEL=llama3.1:8b</code></pre>
       <h2>9. 추천 공부 순서</h2>
       <ol class="flow">
         <li><strong>먼저 앱을 실행합니다.</strong><br>화면에서 Agent 생성, 대화 실행, 리포트 생성을 직접 눌러 봅니다.</li>
-        <li><strong>README를 읽습니다.</strong><br>설치, 실행, 제출 방법을 확인합니다.</li>
+        <li><strong>README를 읽습니다.</strong><br>설치, 실행, 배포 방법을 확인합니다.</li>
         <li><strong><code>models.py</code>를 봅니다.</strong><br>이 프로젝트가 어떤 정보를 저장하는지 이해합니다.</li>
-        <li><strong><code>llm_client.py</code>를 봅니다.</strong><br>OpenAI, Ollama, Mock 모드가 같은 기능 이름으로 묶이는 방식을 봅니다.</li>
+        <li><strong><code>llm_client.py</code>를 봅니다.</strong><br>OpenAI, Ollama, 샘플 모드가 같은 기능 이름으로 묶이는 방식을 봅니다.</li>
         <li><strong><code>simulation.py</code>를 봅니다.</strong><br>대화 후 Fact 저장과 Reflection 업데이트가 실제로 어디서 일어나는지 확인합니다.</li>
         <li><strong><code>app.py</code>를 봅니다.</strong><br>사용자가 보는 버튼과 탭이 내부 기능을 어떻게 호출하는지 연결해 봅니다.</li>
         <li><strong>테스트를 실행합니다.</strong><br><code>pytest</code>가 통과하면 핵심 기능이 깨지지 않았다는 뜻입니다.</li>
       </ol>
     </section>
 
-    <section id="prompt">
-      <h2>10. 한 번에 완성하는 프롬프트</h2>
+    <section id="maintenance">
+      <h2>10. 유지보수 메모</h2>
       <p>
-        아래 프롬프트는 이 프로젝트를 처음부터 다시 만들고 싶을 때 사용할 수 있는 완성형 요청입니다.
-        비전공자도 이해할 수 있게 설명, 구현, 테스트, 문서화를 모두 요구하도록 구성했습니다.
+        기능을 바꿀 때는 <code>models.py</code>의 데이터 구조, <code>simulation.py</code>의 저장 흐름,
+        <code>llm_client.py</code>의 JSON 응답 계약을 함께 확인합니다. 이 세 부분이 맞물려야 앱 화면과
+        리포트가 같은 상태를 바라봅니다.
       </p>
-      <div class="copy-box">너는 Python과 Streamlit을 사용하는 개발 에이전트다. “MemoryTown AI”라는 과제 제출용 프로젝트를 처음부터 끝까지 완성해줘.
-
-목표:
-AI를 활용한 스타트업 서비스 기획 및 구현 과제를 제출 가능한 상태로 만든다.
-
-서비스 개요:
-MemoryTown AI는 여러 AI Agent가 가상의 하루 일정을 계획하고, 같은 장소에서 만나 대화하며, 서로에 대한 기억과 관계를 형성하는 AI Agent 관계 시뮬레이션 서비스다. 게임 NPC, 교육용 역할극, 시나리오 제작, AI 캐릭터 테스트 서비스로 확장 가능한 스타트업 아이템처럼 기획한다.
-
-비전공자도 이해할 수 있도록 코드, 문서, README에 쉬운 설명을 포함해줘.
-
-필수 구현:
-1. Agent 구조
-- Agent는 이름, 나이, 직업, 성격을 가진다.
-- Agent는 Memory를 가진다.
-- Memory는 대화에서 추출된 Fact를 라운드별로 저장한다.
-- Agent는 Relation Map을 가진다.
-- Relation Map은 다른 Agent와의 관계 요약인 Reflection을 저장한다.
-- Agent 생성 시 초기 Memory를 주입할 수 있어야 한다.
-
-2. 대화 시스템
-- 2명 이상의 Agent가 한 라운드에서 대화할 수 있어야 한다.
-- 라운드마다 참여 Agent와 발언 횟수 turns를 설정할 수 있어야 한다.
-- 대화 주제 topic은 선택 사항이다.
-- topic이 없으면 Agent가 Memory 기반으로 자연스럽게 주제를 꺼낸다.
-- 처음 만나는 Agent와는 인사와 자기소개부터 시작한다.
-
-3. Fact 추출 및 Reflection
-- 한 라운드 대화가 끝나면 LLM이 각 Agent에 대한 Fact를 추출한다.
-- 추출된 Fact는 해당 Agent 본인을 제외한 나머지 참여자의 Memory에 저장한다.
-- 한 라운드가 끝나면 참여한 모든 Agent 쌍에 대해 Reflection을 업데이트한다.
-- Reflection은 “이 Agent가 상대를 어떻게 기억하고 느끼는지”를 요약한다.
-
-4. 리포트
-- 시뮬레이션 종료 후 특정 Agent 시점의 리포트를 출력한다.
-- 리포트는 상대방별로 “알고 있는 사실”, “관계 요약 / Reflection” 순서로 보여준다.
-- 웹 화면에서 볼 수 있고 Markdown 파일로 저장 또는 다운로드할 수 있어야 한다.
-
-5. 자동 시뮬레이션
-- 가상의 활동 시간 범위를 08:00~22:00으로 설정한다.
-- 2시간 단위 시간 슬롯을 사용한다.
-- 가상의 공간 목록을 정의한다. 예: 집, 학교, 카페, 레스토랑, 도서관, 회사
-- 하루 시작 전 각 Agent가 Planning Prompt를 통해 시간대별 장소 계획을 세운다.
-- 시뮬레이션은 시간 순서대로 진행된다.
-- 같은 장소에 있는 Agent들끼리 자동으로 대화한다.
-- 가상의 이틀이 지난 후 특정 Agent 기준 리포트를 파일로 저장할 수 있어야 한다.
-
-AI 모드:
-- OpenAI API를 사용할 수 있게 구현한다.
-- API Key는 코드에 하드코딩하지 않는다.
-- .env 또는 환경변수 OPENAI_API_KEY를 사용한다.
-- OPENAI_MODEL 환경변수로 모델명을 바꿀 수 있게 한다.
-- Ollama 환경도 인식해 로컬 LLM으로 실행할 수 있게 한다.
-- OLLAMA_HOST와 OLLAMA_MODEL 환경변수를 지원한다.
-- Ollama 서버가 감지되면 Ollama 로컬 모드를 선택할 수 있게 한다.
-- API Key나 Ollama가 없을 때는 MockLLM 모드로 동작한다.
-- README에 “제출 전 실제 AI 모드 또는 Ollama 로컬 모드로 실행 필요”라고 명확히 적는다.
-- LLM 결과는 가능하면 JSON으로 파싱한다.
-- JSON 파싱 실패나 API 오류가 나도 앱이 죽지 않도록 fallback 처리한다.
-
-Streamlit 앱:
-- 모든 UI 텍스트는 한국어로 작성한다.
-- 사이드바에서 Mock 모드, Real AI 모드, Ollama 로컬 모드를 선택할 수 있게 한다.
-- 주요 탭은 다음과 같다.
-  1. 서비스 소개
-  2. Agent 생성
-  3. 수동 대화 라운드
-  4. 하루 / 이틀 자동 시뮬레이션
-  5. Memory 확인
-  6. Relation Map 확인
-  7. 최종 리포트
-  8. 제출 체크리스트
-- 기본 샘플 Agent 4명을 제공한다.
-- 사용자가 Agent를 추가/수정할 수 있게 한다.
-- 대화 로그, Fact, Memory, Reflection이 화면에 보이게 한다.
-- 최종 리포트를 Markdown 파일로 다운로드할 수 있게 한다.
-
-필수 파일 구조:
-- app.py
-- memorytown/
-  - __init__.py
-  - models.py
-  - llm_client.py
-  - simulation.py
-  - report.py
-  - storage.py
-- data/
-  - sample_agents.json
-- docs/
-  - MemoryTown_AI_기획서.md
-  - MemoryTown_AI_발표자료_구성.md
-  - MemoryTown_AI_학습자료.html
-- tests/
-  - test_simulation.py
-  - test_report.py
-- scripts/
-  - make_submission_zip.py
-- requirements.txt
-- README.md
-- .env.example
-- .gitignore
-
-문서:
-- docs/MemoryTown_AI_기획서.md에는 프로젝트명, 서비스 한 줄 소개, 문제 정의, 목표 사용자, 핵심 기능, AI 활용 방식, 데이터 구조, 구현 플랫폼, 서비스 화면 구성, 스타트업 확장 가능성, 수익 모델 아이디어, 기대 효과, 한계점과 개선 방향, 실행 방법, 과제 요구사항 충족표를 포함한다.
-- docs/MemoryTown_AI_발표자료_구성.md에는 PPT로 옮기기 쉬운 8~10장 슬라이드 구성을 작성한다.
-- docs/MemoryTown_AI_학습자료.html에는 비전공자도 이해할 수 있도록 프로젝트 목표, 핵심 개념, 작동 흐름, 파일별 역할, 실행 방법, AI 모드, 과제 조건 매핑, 공부 순서, 완성 프롬프트를 담는다.
-- README.md에는 프로젝트 소개, 과제 요구사항 매핑표, 설치 방법, 실행 방법, Mock 모드, Real AI 모드, Ollama 로컬 모드, .env 설정 방법, 화면별 사용 방법, 제출 전 체크리스트, 폴더 구조, 테스트 실행 방법, 제출용 zip 생성 방법을 포함한다.
-
-테스트:
-- MockLLM을 사용해서 테스트한다.
-- Agent 생성 테스트
-- 대화 라운드 후 Memory 저장 테스트
-- Reflection 업데이트 테스트
-- 최종 리포트 생성 테스트
-- 저장/불러오기 테스트
-- Ollama 서버가 없을 때 Mock fallback 테스트
-
-제출 zip:
-- scripts/make_submission_zip.py로 제출용 zip을 만든다.
-- app.py, memorytown/, data/sample_agents.json, docs/, tests/, scripts/make_submission_zip.py, README.md, requirements.txt, .env.example을 포함한다.
-- .env, __pycache__, .venv, reports 내부 개인 결과물, .git은 제외한다.
-
-마지막으로:
-- pytest를 실행해 통과 여부를 확인한다.
-- streamlit run app.py로 앱이 실행되는지 확인한다.
-- 제출 zip을 생성한다.
-- 구현한 내용과 실행 방법을 짧게 요약해줘.</div>
+      <ul>
+        <li>새로운 Agent 필드를 추가하면 저장/불러오기와 리포트 출력도 함께 갱신합니다.</li>
+        <li>LLM 응답 형식을 바꾸면 OpenAI, Ollama, 샘플 모드 fallback을 같은 기준으로 맞춥니다.</li>
+        <li>시뮬레이션 규칙을 바꾼 뒤에는 <code>pytest</code>와 Ollama smoke test를 순서대로 실행합니다.</li>
+      </ul>
     </section>
   </main>
 </body>
