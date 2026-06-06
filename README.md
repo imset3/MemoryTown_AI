@@ -1,4 +1,7 @@
 # MemoryTown AI
+요약: AI Agent가 하루를 계획하고 만나 대화하며 Memory와 Relation Map을 쌓는 Streamlit 기반 관계 시뮬레이션 과제입니다.
+다운로드: GitHub Releases에서 `MemoryTown_AI_project.zip`을 내려받거나, 저장소의 초록색 `Code` 버튼에서 `Download ZIP`을 선택하세요.
+빠른 실행: 압축 해제 후 `pip install -r requirements.txt`를 실행하고 `streamlit run app.py`로 시작합니다.
 
 MemoryTown AI는 여러 AI Agent가 가상의 하루 일정을 계획하고, 같은 장소에서 만나 대화하며, 서로에 대한 기억과 관계를 형성하는 Streamlit 기반 AI Agent 관계 시뮬레이션 서비스입니다.
 
@@ -39,6 +42,13 @@ streamlit run app.py
 ```
 
 브라우저가 자동으로 열리지 않으면 터미널에 표시되는 로컬 주소로 접속합니다.
+
+## GitHub Release 다운로드 방법
+
+1. 저장소 오른쪽의 `Releases`를 클릭합니다.
+2. 최신 릴리즈에서 `MemoryTown_AI_project.zip`을 다운로드합니다.
+3. 압축을 풀고 프로젝트 폴더에서 `pip install -r requirements.txt`를 실행합니다.
+4. `streamlit run app.py`로 앱을 실행합니다.
 
 ## Mock 모드 실행 방법
 

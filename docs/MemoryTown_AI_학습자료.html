@@ -299,10 +299,11 @@
       <a href="#flow">3. 작동 흐름</a>
       <a href="#files">4. 파일별 역할</a>
       <a href="#run">5. 실행 방법</a>
-      <a href="#modes">6. AI 모드</a>
-      <a href="#assignment">7. 과제 조건 매핑</a>
-      <a href="#study">8. 공부 순서</a>
-      <a href="#prompt">9. 완성 프롬프트</a>
+      <a href="#download">6. GitHub 다운로드</a>
+      <a href="#modes">7. AI 모드</a>
+      <a href="#assignment">8. 과제 조건 매핑</a>
+      <a href="#study">9. 공부 순서</a>
+      <a href="#prompt">10. 완성 프롬프트</a>
     </nav>
 
     <section id="goal">
@@ -454,8 +455,27 @@
       <pre><code>python scripts/make_submission_zip.py</code></pre>
     </section>
 
+    <section id="download">
+      <h2>6. GitHub Release 다운로드 방법</h2>
+      <p>
+        과제 제출 링크를 받은 사람은 GitHub 저장소에서 바로 전체 프로젝트 zip을 내려받을 수 있습니다.
+        저장소 오른쪽의 <strong>Releases</strong>를 열고 최신 릴리즈의
+        <code>MemoryTown_AI_project.zip</code> 파일을 다운로드하면 됩니다.
+      </p>
+      <ol class="flow">
+        <li><strong>GitHub 저장소를 엽니다.</strong><br><code>https://github.com/imset3/MemoryTown_AI</code>에 접속합니다.</li>
+        <li><strong>Releases를 클릭합니다.</strong><br>최신 릴리즈에서 <code>MemoryTown_AI_project.zip</code>을 선택합니다.</li>
+        <li><strong>압축을 풉니다.</strong><br>다운로드한 zip을 원하는 폴더에 압축 해제합니다.</li>
+        <li><strong>앱을 실행합니다.</strong><br><code>pip install -r requirements.txt</code> 후 <code>streamlit run app.py</code>를 실행합니다.</li>
+      </ol>
+      <div class="note">
+        GitHub의 초록색 <strong>Code</strong> 버튼에서 <strong>Download ZIP</strong>을 선택해도 소스코드를 받을 수 있습니다.
+        다만 과제 제출용으로는 Release에 올린 zip 파일을 안내하는 것이 가장 명확합니다.
+      </div>
+    </section>
+
     <section id="modes">
-      <h2>6. AI 모드 이해하기</h2>
+      <h2>7. AI 모드 이해하기</h2>
       <div class="grid">
         <div class="card">
           <h3><span class="tag">Mock</span> Mock 모드</h3>
@@ -479,7 +499,7 @@ OLLAMA_MODEL=llama3.1:8b</code></pre>
     </section>
 
     <section id="assignment">
-      <h2>7. 과제 조건 매핑</h2>
+      <h2>8. 과제 조건 매핑</h2>
       <table>
         <thead>
           <tr>
@@ -544,7 +564,7 @@ OLLAMA_MODEL=llama3.1:8b</code></pre>
     </section>
 
     <section id="study">
-      <h2>8. 추천 공부 순서</h2>
+      <h2>9. 추천 공부 순서</h2>
       <ol class="flow">
         <li><strong>먼저 앱을 실행합니다.</strong><br>화면에서 Agent 생성, 대화 실행, 리포트 생성을 직접 눌러 봅니다.</li>
         <li><strong>README를 읽습니다.</strong><br>설치, 실행, 제출 방법을 확인합니다.</li>
@@ -557,7 +577,7 @@ OLLAMA_MODEL=llama3.1:8b</code></pre>
     </section>
 
     <section id="prompt">
-      <h2>9. 한 번에 완성하는 프롬프트</h2>
+      <h2>10. 한 번에 완성하는 프롬프트</h2>
       <p>
         아래 프롬프트는 이 프로젝트를 처음부터 다시 만들고 싶을 때 사용할 수 있는 완성형 요청입니다.
         비전공자도 이해할 수 있게 설명, 구현, 테스트, 문서화를 모두 요구하도록 구성했습니다.
