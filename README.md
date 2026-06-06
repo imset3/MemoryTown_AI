@@ -54,6 +54,8 @@ Mock 모드는 개발과 제출 화면 확인을 위한 대체 모드입니다. 
 
 Ollama가 설치되어 있고 로컬 서버가 실행 중이면 앱이 환경을 감지해 `Ollama 로컬 모드`를 사용할 수 있습니다. `OLLAMA_HOST` 또는 `OLLAMA_MODEL` 환경변수가 있거나 `http://localhost:11434` 서버가 응답하면 로컬 AI 모드 후보로 인식합니다.
 
+앱은 현재 컴퓨터의 Ollama `/api/tags`를 읽어 설치된 로컬 모델 목록을 자동으로 불러옵니다. 사이드바의 `설치된 Ollama 모델` 선택 상자에서 원하는 모델을 고르면 이후 대화, Fact 추출, Reflection, Daily Plan 생성에 해당 모델을 사용합니다.
+
 예시:
 
 ```bash

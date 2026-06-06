@@ -40,6 +40,7 @@
 - Reflection Update: 상대에 대한 관계 요약 갱신
 - Planning Prompt: 시간대별 장소 계획 생성
 - OpenAI API 또는 Ollama 로컬 LLM 선택 가능
+- 현재 컴퓨터에 설치된 Ollama 모델 목록 자동 인식
 
 ## 7. 데이터 구조
 

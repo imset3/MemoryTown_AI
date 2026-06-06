@@ -6,7 +6,17 @@ from pathlib import Path
 import streamlit as st
 from dotenv import load_dotenv
 
-from memorytown.llm_client import MockLLMClient, OllamaLLMClient, OpenAILLMClient, detect_ollama_available
+from memorytown.llm_client import (
+    DEFAULT_OLLAMA_MODEL,
+    MockLLMClient,
+    OllamaLLMClient,
+    OpenAILLMClient,
+    choose_default_ollama_model,
+    detect_ollama_available,
+    is_probably_embedding_model,
+    list_ollama_models,
+    normalize_ollama_host,
+)
 from memorytown.models import Agent, ConversationRound
 from memorytown.report import generate_agent_report, save_agent_report
 from memorytown.simulation import SimulationEngine
@@ -21,7 +31,7 @@ AI_MODES = ["Mock 모드", "Real AI 모드", "Ollama 로컬 모드"]
 
 
 def default_ai_mode() -> str:
-    if os.getenv("OLLAMA_HOST") or os.getenv("OLLAMA_MODEL") or detect_ollama_available():
+    if os.getenv("OLLAMA_HOST") or os.getenv("OLLAMA_MODEL") or detect_ollama_available() or list_ollama_models():
         return "Ollama 로컬 모드"
     return "Mock 모드"
 
@@ -31,17 +41,22 @@ def build_sample_engine(llm_client=None) -> SimulationEngine:
     return SimulationEngine(agents=sample_agents, llm_client=llm_client or MockLLMClient())
 
 
-def make_llm_client(mode: str):
+def make_llm_client(mode: str, ollama_model: str | None = None):
     if mode == "Real AI 모드":
         return OpenAILLMClient()
     if mode == "Ollama 로컬 모드":
-        return OllamaLLMClient()
+        return OllamaLLMClient(model=ollama_model or st.session_state.get("ollama_model"))
     return MockLLMClient()
 
 
 def ensure_state() -> None:
     if "ai_mode" not in st.session_state:
         st.session_state.ai_mode = default_ai_mode()
+    if "ollama_host" not in st.session_state:
+        st.session_state.ollama_host = normalize_ollama_host()
+    if "ollama_model" not in st.session_state:
+        models = list_ollama_models(st.session_state.ollama_host)
+        st.session_state.ollama_model = os.getenv("OLLAMA_MODEL") or choose_default_ollama_model(models)
     if "engine" not in st.session_state:
         st.session_state.engine = build_sample_engine(make_llm_client(st.session_state.ai_mode))
 
@@ -96,9 +111,37 @@ with st.sidebar:
         else:
             st.warning("OPENAI_API_KEY가 없어 Mock 응답으로 대체됩니다.")
     if selected_mode == "Ollama 로컬 모드":
+        st.session_state.ollama_host = normalize_ollama_host()
+        installed_models = list_ollama_models(st.session_state.ollama_host)
+        if installed_models:
+            if st.session_state.ollama_model not in installed_models:
+                st.session_state.ollama_model = choose_default_ollama_model(installed_models)
+            selected_model = st.selectbox(
+                "설치된 Ollama 모델",
+                installed_models,
+                index=installed_models.index(st.session_state.ollama_model),
+                help="현재 컴퓨터의 Ollama에 설치된 모델 목록입니다. 목록은 Ollama /api/tags에서 불러옵니다.",
+            )
+        else:
+            selected_model = st.text_input(
+                "Ollama 모델명",
+                value=st.session_state.ollama_model,
+                help="설치된 모델을 찾지 못하면 직접 모델명을 입력할 수 있습니다. 예: llama3.1:8b",
+            )
+        if selected_model != st.session_state.ollama_model:
+            st.session_state.ollama_model = selected_model
+            engine.llm_client = make_llm_client(selected_mode, ollama_model=selected_model)
+            st.rerun()
+        if is_probably_embedding_model(selected_model):
+            st.warning("선택한 모델은 임베딩용일 가능성이 높아 대화 생성에는 적합하지 않을 수 있습니다.")
+        if st.button("Ollama 모델 목록 새로고침"):
+            engine.llm_client = make_llm_client(selected_mode, ollama_model=st.session_state.ollama_model)
+            st.rerun()
         ollama_client = engine.llm_client if isinstance(engine.llm_client, OllamaLLMClient) else make_llm_client(selected_mode)
         st.write(f"Ollama 주소: `{ollama_client.host}`")
         st.write(f"Ollama 모델: `{ollama_client.model}`")
+        if ollama_client.available_models:
+            st.caption(f"인식된 로컬 모델 {len(ollama_client.available_models)}개: {', '.join(ollama_client.available_models)}")
         if ollama_client.is_ready:
             st.success("로컬 Ollama 서버를 감지했습니다.")
         else:

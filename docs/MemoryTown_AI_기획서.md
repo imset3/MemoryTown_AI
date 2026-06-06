@@ -39,7 +39,7 @@ MemoryTown AI는 LLM을 네 가지 지점에서 활용한다.
 3. Reflection 업데이트: 대화와 누적 Memory를 바탕으로 상대 Agent에 대한 관계 요약을 갱신한다.
 4. Daily Planning: 각 Agent가 하루 동안 어느 장소에 있을지 시간대별 계획을 세운다.
 
-API Key가 없는 개발 환경에서는 MockLLM이 같은 인터페이스로 동작한다. Ollama가 설치된 환경에서는 `OLLAMA_HOST`, `OLLAMA_MODEL`을 통해 로컬 LLM으로도 실행할 수 있다. 제출 전에는 Real AI 모드 또는 Ollama 로컬 모드에서 실제 AI 호출을 확인해야 한다.
+API Key가 없는 개발 환경에서는 MockLLM이 같은 인터페이스로 동작한다. Ollama가 설치된 환경에서는 `OLLAMA_HOST`, `OLLAMA_MODEL`을 통해 로컬 LLM으로도 실행할 수 있다. 앱은 Ollama `/api/tags`에서 현재 컴퓨터에 설치된 모델 목록을 인식하고, 사용자가 사이드바에서 원하는 로컬 모델을 선택할 수 있게 한다. 제출 전에는 Real AI 모드 또는 Ollama 로컬 모드에서 실제 AI 호출을 확인해야 한다.
 
 ## 데이터 구조
 

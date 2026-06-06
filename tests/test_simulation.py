@@ -1,4 +1,11 @@
-from memorytown.llm_client import MockLLMClient, OllamaLLMClient
+from memorytown.llm_client import (
+    MockLLMClient,
+    OllamaLLMClient,
+    choose_default_ollama_model,
+    is_probably_embedding_model,
+    list_ollama_models,
+    list_ollama_models_from_manifests,
+)
 from memorytown.models import Agent
 from memorytown.simulation import SimulationEngine
 from memorytown.storage import load_state, save_state
@@ -72,3 +79,27 @@ def test_ollama_client_falls_back_when_server_is_unavailable():
     assert not client.is_ready
     assert len(turns) == 2
     assert client.error_messages
+
+
+def test_list_ollama_models_returns_empty_list_when_server_is_unavailable(tmp_path, monkeypatch):
+    monkeypatch.setenv("OLLAMA_MODELS", str(tmp_path))
+    monkeypatch.setenv("PATH", "")
+    assert list_ollama_models(host="http://127.0.0.1:9") == []
+
+
+def test_list_ollama_models_from_manifests(tmp_path):
+    manifest = tmp_path / "manifests" / "registry.ollama.ai" / "library" / "llama3.1" / "8b"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text("{}", encoding="utf-8")
+    custom_manifest = tmp_path / "manifests" / "registry.ollama.ai" / "team" / "demo" / "latest"
+    custom_manifest.parent.mkdir(parents=True)
+    custom_manifest.write_text("{}", encoding="utf-8")
+
+    assert list_ollama_models_from_manifests(tmp_path) == ["llama3.1:8b", "team/demo:latest"]
+
+
+def test_choose_default_ollama_model_prefers_chat_model():
+    models = ["bge-m3:latest", "deepseek-r1:8b", "nomic-embed-text:latest"]
+
+    assert is_probably_embedding_model("nomic-embed-text:latest")
+    assert choose_default_ollama_model(models) == "deepseek-r1:8b"

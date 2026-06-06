@@ -3,9 +3,11 @@ from __future__ import annotations
 import json
 import os
 import random
+import subprocess
 import urllib.error
 import urllib.request
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Any
 
 from dotenv import load_dotenv
@@ -15,6 +17,7 @@ from .models import Agent, ConversationTurn, DailyPlan
 
 DEFAULT_OLLAMA_HOST = "http://localhost:11434"
 DEFAULT_OLLAMA_MODEL = "llama3.1:8b"
+EMBEDDING_MODEL_HINTS = ("embed", "embedding", "bge", "nomic-embed")
 
 
 class LLMClient(ABC):
@@ -86,6 +89,82 @@ def detect_ollama_available(host: str | None = None, timeout: float = 0.4) -> bo
             return 200 <= response.status < 300
     except (OSError, urllib.error.URLError):
         return False
+
+
+def list_ollama_models_from_manifests(models_dir: str | Path | None = None) -> list[str]:
+    root = Path(models_dir or os.getenv("OLLAMA_MODELS") or Path.home() / ".ollama" / "models")
+    manifests = root / "manifests"
+    if not manifests.exists():
+        return []
+
+    models: set[str] = set()
+    for path in manifests.rglob("*"):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(manifests)
+        parts = relative.parts
+        if len(parts) < 4:
+            continue
+        namespace_parts = list(parts[1:-2])
+        model_name = parts[-2]
+        tag = parts[-1]
+        if namespace_parts == ["library"]:
+            models.add(f"{model_name}:{tag}")
+        else:
+            namespace = "/".join(namespace_parts)
+            models.add(f"{namespace}/{model_name}:{tag}")
+    return sorted(models)
+
+
+def list_ollama_models_from_cli(timeout: float = 2.0) -> list[str]:
+    try:
+        result = subprocess.run(
+            ["ollama", "list"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+    if result.returncode != 0:
+        return []
+
+    models: list[str] = []
+    for index, line in enumerate(result.stdout.splitlines()):
+        if index == 0 or not line.strip():
+            continue
+        name = line.split()[0]
+        if name and name != "NAME":
+            models.append(name)
+    return sorted(set(models))
+
+
+def list_ollama_models(host: str | None = None, timeout: float = 1.5) -> list[str]:
+    target = f"{normalize_ollama_host(host)}/api/tags"
+    models: list[str] = []
+    try:
+        with urllib.request.urlopen(target, timeout=timeout) as response:
+            data = json.loads(response.read().decode("utf-8"))
+            models = [item.get("name", "") for item in data.get("models", [])]
+    except (OSError, urllib.error.URLError, json.JSONDecodeError):
+        models = []
+    merged = set(model for model in models if model)
+    merged.update(list_ollama_models_from_manifests())
+    merged.update(list_ollama_models_from_cli())
+    return sorted(merged)
+
+
+def is_probably_embedding_model(model: str) -> bool:
+    lowered = model.lower()
+    return any(hint in lowered for hint in EMBEDDING_MODEL_HINTS)
+
+
+def choose_default_ollama_model(models: list[str]) -> str:
+    for model in models:
+        if not is_probably_embedding_model(model):
+            return model
+    return models[0] if models else DEFAULT_OLLAMA_MODEL
 
 
 class MockLLMClient(LLMClient):
@@ -385,8 +464,10 @@ class OllamaLLMClient(OpenAILLMClient):
 
     def __init__(self, model: str | None = None, host: str | None = None) -> None:
         load_dotenv()
-        self.model = model or os.getenv("OLLAMA_MODEL", DEFAULT_OLLAMA_MODEL)
         self.host = normalize_ollama_host(host)
+        self.available_models = list_ollama_models(self.host)
+        env_model = os.getenv("OLLAMA_MODEL")
+        self.model = model or env_model or choose_default_ollama_model(self.available_models)
         self.error_messages: list[str] = []
         self._mock = MockLLMClient()
         self._available = self._probe()
@@ -402,12 +483,11 @@ class OllamaLLMClient(OpenAILLMClient):
             )
             return False
         try:
-            data = self._request_json("/api/tags", {}, method="GET", timeout=1.5)
-            models = [item.get("name") for item in data.get("models", [])]
-            if models and self.model not in models:
+            self.available_models = list_ollama_models(self.host)
+            if self.available_models and self.model not in self.available_models:
                 self.error_messages.append(
                     f"Ollama 서버는 감지됐지만 '{self.model}' 모델이 목록에 없습니다. "
-                    f"예: ollama pull {self.model}"
+                    f"설치된 모델: {', '.join(self.available_models)}"
                 )
             return True
         except Exception as exc:
