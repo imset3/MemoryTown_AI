@@ -1,0 +1,12 @@
+.env
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+reports/
+data/simulation_state.json
+data/smoke_*.json
+submission/
+*.zip

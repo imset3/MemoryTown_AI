@@ -1,8 +1,8 @@
 # MemoryTown AI
 
-교수님 확인용 최종 제출본: [`final_assignment/`](./final_assignment/) 폴더에 독립 실행 가능한 과제 전체를 분리해두었습니다.
+이 폴더는 교수님 확인용 최종 제출본입니다. 이 위치에서 바로 설치, 실행, 테스트할 수 있습니다.
 다운로드: GitHub Releases에서 `MemoryTown_AI_project.zip`을 내려받거나, 저장소의 초록색 `Code` 버튼에서 `Download ZIP`을 선택하세요.
-빠른 실행: `cd final_assignment` 후 `pip install -r requirements.txt`를 실행하고 `streamlit run app.py`로 시작합니다.
+빠른 실행: `pip install -r requirements.txt` 후 `streamlit run app.py`로 시작합니다.
 
 MemoryTown AI는 여러 캐릭터 Agent가 하루 일정을 계획하고, 같은 장소에서 만나 대화하며, 서로에 대한 기억과 관계를 쌓는 Streamlit 기반 시뮬레이션입니다.
 
