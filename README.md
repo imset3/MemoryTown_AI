@@ -1,146 +1,82 @@
 # MemoryTown AI
 
-교수님 확인용 최종 제출본: [`final_assignment/`](./final_assignment/) 폴더에 독립 실행 가능한 과제 전체를 분리해두었습니다.
-다운로드: GitHub Releases에서 `MemoryTown_AI_project.zip`을 내려받거나, 저장소의 초록색 `Code` 버튼에서 `Download ZIP`을 선택하세요.
-빠른 실행: `cd final_assignment` 후 `pip install -r requirements.txt`를 실행하고 `streamlit run app.py`로 시작합니다.
+교수님께: 이 저장소는 weekly assignment와 final assignment를 분리해 정리했습니다.
 
-MemoryTown AI는 여러 캐릭터 Agent가 하루 일정을 계획하고, 같은 장소에서 만나 대화하며, 서로에 대한 기억과 관계를 쌓는 Streamlit 기반 시뮬레이션입니다.
+- Weekly 정리: [`weekly_assignment/`](./weekly_assignment/)
+- Final 최종 제출본: [`final_assignment/`](./final_assignment/)
+- 전체 zip 다운로드: [GitHub Release](https://github.com/imset3/MemoryTown_AI/releases/tag/v1.0.0)에서 `MemoryTown_AI_project.zip`을 받으면 됩니다.
 
-Agent는 이름, 나이, 직업, 성격을 가지고 시작합니다. 대화가 끝나면 대화에서 드러난 Fact가 Memory로 저장되고, 상대를 어떻게 기억하는지 Relation Map에 Reflection이 갱신됩니다.
+## 한 줄 요약
 
-## 주요 기능
+MemoryTown AI는 여러 AI Agent가 하루 일정을 계획하고, 같은 장소에서 만나 대화하며, 서로에 대한 Memory와 Relation Map을 쌓는 Streamlit 기반 AI 관계 시뮬레이션입니다.
 
-- Agent 생성, 수정, 삭제
-- 초기 Memory 입력
-- 참여 Agent와 발언 횟수를 정하는 수동 대화 라운드
-- Agent별 Daily Plan 생성
-- 같은 시간과 장소에 모인 Agent 간 자동 대화
-- Memory와 Relation Map 확인
-- 특정 Agent 시점의 Markdown 리포트 생성 및 저장
-- OpenAI, Ollama, 샘플 모드 지원
+## 교수님이 바로 보시면 좋은 순서
 
-## 설치
+1. [`final_assignment/README.md`](./final_assignment/README.md): 실행 방법과 프로젝트 요약
+2. [`final_assignment/app.py`](./final_assignment/app.py): Streamlit 구현물
+3. [`final_assignment/docs/MemoryTown_AI_기획서.md`](./final_assignment/docs/MemoryTown_AI_기획서.md): 제출용 기획서
+4. [`final_assignment/docs/MemoryTown_AI_발표자료_구성.md`](./final_assignment/docs/MemoryTown_AI_발표자료_구성.md): 발표자료 구성
+5. [`final_assignment/docs/MemoryTown_AI_학습자료.html`](./final_assignment/docs/MemoryTown_AI_학습자료.html): 비전공자용 학습자료
 
-Python 3.10 이상을 권장합니다.
+## 실행 방법
 
 ```bash
+cd final_assignment
 pip install -r requirements.txt
-```
-
-## 실행
-
-```bash
 streamlit run app.py
 ```
 
-브라우저가 자동으로 열리지 않으면 터미널에 표시되는 로컬 주소로 접속하세요.
+브라우저가 자동으로 열리지 않으면 터미널에 표시되는 로컬 주소로 접속하면 됩니다.
 
-## 실행 모드
+## AI 실행 모드
 
-### 샘플 모드
+- Mock 모드: API 키 없이 전체 흐름을 확인하는 샘플 모드
+- Ollama 로컬 모드: 현재 컴퓨터에 설치된 Ollama 모델을 자동 인식해 실행
+- Real AI 모드: `.env` 또는 환경변수의 `OPENAI_API_KEY`, `OPENAI_MODEL` 사용
 
-외부 모델 연결 없이 전체 흐름을 확인할 수 있는 기본 모드입니다. 대화, Fact 추출, Reflection, Daily Plan이 결정적인 샘플 응답으로 동작합니다.
-
-### Ollama 로컬 모드
-
-Ollama가 설치되어 있고 로컬 서버가 실행 중이면 앱이 모델 목록을 읽어 사이드바에 표시합니다.
+Ollama 서버가 실행 중이고 모델이 설치되어 있다면 실제 로컬 모델 smoke test도 가능합니다.
 
 ```bash
-ollama pull llama3.1:8b
-ollama serve
-```
-
-다른 터미널에서 실행합니다.
-
-```bash
-export OLLAMA_HOST=http://localhost:11434
-export OLLAMA_MODEL=llama3.1:8b
-streamlit run app.py
-```
-
-### OpenAI 모드
-
-OpenAI API 키와 모델명을 환경변수 또는 `.env` 파일에 설정합니다.
-
-```bash
-cp .env.example .env
-```
-
-`.env` 예시:
-
-```bash
-OPENAI_API_KEY=your_api_key
-OPENAI_MODEL=gpt-4.1-mini
-OLLAMA_HOST=http://localhost:11434
-OLLAMA_MODEL=llama3.1:8b
-```
-
-## 화면 구성
-
-- 서비스 소개: 프로젝트 개요와 활용 방식
-- Agent 생성: 샘플 Agent 확인, Agent 추가와 수정
-- 수동 대화 라운드: 참여자와 발언 횟수를 정해 대화 실행
-- 하루 / 이틀 자동 시뮬레이션: Daily Plan 생성 후 장소 기반 자동 대화
-- Memory 확인: Agent가 알고 있는 Fact 목록 확인
-- Relation Map 확인: Agent별 상대방 Reflection 확인
-- 최종 리포트: 특정 Agent 시점의 Markdown 리포트 생성
-- 상태 점검: 핵심 기능 구현 상태 확인
-
-## 프로젝트 구조
-
-```text
-.
-├── app.py
-├── memorytown/
-│   ├── __init__.py
-│   ├── models.py
-│   ├── llm_client.py
-│   ├── simulation.py
-│   ├── report.py
-│   └── storage.py
-├── data/
-│   └── sample_agents.json
-├── docs/
-│   ├── MemoryTown_AI_기획서.md
-│   ├── MemoryTown_AI_발표자료_구성.md
-│   └── MemoryTown_AI_학습자료.html
-├── tests/
-│   ├── test_simulation.py
-│   └── test_report.py
-├── scripts/
-│   ├── make_submission_zip.py
-│   └── smoke_ollama.py
-├── requirements.txt
-├── README.md
-└── .env.example
-```
-
-## 테스트
-
-```bash
-pytest
-```
-
-테스트는 샘플 모드를 사용하므로 API 키가 없어도 실행됩니다.
-
-Ollama 서버가 실행 중이고 모델이 설치되어 있다면 실제 로컬 모델 smoke test도 실행할 수 있습니다.
-
-```bash
+cd final_assignment
 python scripts/smoke_ollama.py
 ```
 
-## 패키지 생성
+## 과제 조건 충족 요약
 
-배포용 zip이 필요하면 아래 명령을 사용합니다.
+| 조건 | 충족 위치 |
+| --- | --- |
+| AI 스타트업 서비스 기획 | `final_assignment/docs/MemoryTown_AI_기획서.md` |
+| Streamlit 구현물 | `final_assignment/app.py` |
+| AI 기능 실제 작동 | OpenAI / Ollama / Mock LLM 클라이언트 |
+| Agent, Memory, Relation Map | `final_assignment/memorytown/models.py` |
+| 대화, Fact 추출, Reflection | `final_assignment/memorytown/simulation.py` |
+| 자동 Daily Plan 및 장소 기반 대화 | `final_assignment/memorytown/simulation.py` |
+| 최종 리포트 | `final_assignment/memorytown/report.py` |
+| 테스트 | `final_assignment/tests/` |
 
-```bash
-python scripts/make_submission_zip.py
-```
-
-생성 결과:
+## 저장소 구조
 
 ```text
-submission/MemoryTown_AI_submission.zip
+.
+├── weekly_assignment/      # weekly assignment 정리
+├── final_assignment/       # 교수님 확인용 최종 제출본
+├── README.md               # 저장소 전체 안내
+└── pytest.ini              # 루트 테스트 탐색 범위 설정
 ```
 
-`.env`, `.git`, `.venv`, `__pycache__`, 개인 리포트 파일은 zip에서 제외됩니다.
+## 다운로드 방법
+
+GitHub에서 바로 확인하려면 `final_assignment/` 폴더를 열면 됩니다.
+
+압축 파일로 받으려면 아래 Release에서 `MemoryTown_AI_project.zip`을 다운로드하세요.
+
+```text
+https://github.com/imset3/MemoryTown_AI/releases/tag/v1.0.0
+```
+
+## 검증 상태
+
+- 루트 테스트 통과
+- `final_assignment/` 내부 테스트 통과
+- Ollama 실제 모델 smoke test 통과
+- Release zip에 `.env` 미포함 확인
